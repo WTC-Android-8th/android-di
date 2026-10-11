@@ -17,7 +17,11 @@ This repository is an Android learning mission with five stages, covering buildi
 
 ## Learning Review Trigger
 
-When a PR comment invokes the standard review with `@codex review`:
+The exact GitHub code review trigger is `@codex review`. The built-in review focuses on high-priority issues and may only react with 👍 when it finds none. `AGENTS.md` guides the review, but it cannot guarantee that this review flow will publish educational commentary when there are no qualifying findings.
+
+For an educational review with questions, invoke a regular Codex task in a PR comment, for example: `@codex Give me a learning-focused review of this PR using the stage guidance in AGENTS.md.` This starts a task with PR context rather than the standard GitHub review.
+
+When conducting that learning-focused task:
 
 - Review the entire PR diff at the current head commit, including relevant surrounding code. Do not limit the review to the latest commit's changes.
 - Determine the mission stage using the PR stage rules above and apply the relevant guidelines in `Code Review Rules` below.
@@ -26,8 +30,6 @@ When a PR comment invokes the standard review with `@codex review`:
 - Give relevant design feedback on architecture, responsibility separation, Android DI and lifecycle behavior, and naming. Explain the reasoning and alternatives without presenting preferences as defects.
 - Include 1–3 meaningful learning questions grounded in the PR, even if the code works correctly. Suggest a small test or experiment where useful.
 - Return review feedback only. Do not modify code, create commits, or push changes.
-
-The `@codex review` phrase is the GitHub review trigger. The repository rules above define the review style, so the author can use only that trigger. Add a short focus after it only when a one-off review needs a narrower scope.
 
 ## Code Review Rules
 
