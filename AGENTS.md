@@ -1,72 +1,126 @@
-# 만들면서 배우는 DI: 작업 및 코드 리뷰 지침
+# Learning DI by Building It: Development and Code Review Guidelines
 
-이 저장소는 1~5단계에 걸쳐 DI를 직접 만들고 라이브러리로 교체하며 배우는 Android 미션이다. 현재 작업 또는 PR의 단계를 먼저 확인한다. 해당 단계와 이전 단계의 필수 요구 사항을 검토하되, 이후 단계의 설계를 미리 요구하지 않는다. 5단계는 선택 미션이며, 진행 중인 경우에만 그 요구 사항을 적용한다.
+This repository is an Android learning mission with five stages, covering building a DI container and replacing it with a library. First identify the stage of the current task or PR. Apply the current stage's requirements and earlier functional guarantees that still apply. Do not carry forward implementation restrictions that a later stage explicitly replaces, or require later-stage designs in advance. Stage 5 is optional; apply its requirements only when that stage is in progress.
 
-## 작업 원칙
+## Development Principles
 
-- 기능 구현 전에 해당 단계의 기능 목록을 `README.md`에 기록하고, 기능 단위로 변경한다. 미션에서 설계 근거를 요구하는 단계에는 선택 이유도 기록한다.
-- 미션에서 선택을 허용한 설계는 한 가지 정답으로 단정하지 않는다. 선택의 근거와 실제 동작을 확인한다.
-- 학습을 위한 코드를 상용 DI 라이브러리의 관례에 맞추려고 불필요하게 복잡하게 만들지 않는다.
+- Before implementing features, record the feature list for the current stage in `README.md` and organize changes by feature. Document design decisions when the stage requires a rationale.
+- When the mission allows alternative designs, do not assume there is only one correct solution. Examine the reasoning and actual behavior.
+- Avoid adding unnecessary complexity to educational code merely to match conventions used by production DI libraries.
 
-## PR 단계 판별
+## Identifying the PR Stage
 
-- PR 리뷰에서는 PR 본문의 `미션 단계` 항목을 현재 단계의 기준으로 삼는다. PR 템플릿에 `1~5단계` 중 하나를 적는다.
-- 해당 항목이 비어 있으면 변경 내용과 저장소 상태로 단계를 판단할 수 있는지 확인한다. 단계가 분명하지 않으면 단계별 필수 요구 사항을 추측해서 적용하지 말고, 공통 리뷰만 진행하며 단계가 불명확하다고 알린다.
-- 확인한 단계와 이전 단계의 필수 요구 사항만 적용한다. 이후 단계 요구 사항은 해당 단계가 진행 중일 때만 적용한다.
+- For PR reviews, use the `미션 단계` (mission stage) section in the PR description as the source of truth. The author should specify a stage from 1 to 5 in the PR template.
+- If the section is empty, check whether the changes and repository state clearly identify the stage. If the stage remains unclear, do not guess which stage requirements apply. Review only the common guidelines and state that the stage is unclear.
+- Apply the identified stage's mandatory requirements and earlier requirements that remain applicable. For example, Stage 1 prohibits annotations, but Stage 2 requires them; Stage 5 preserves behavior without requiring the custom container's implementation.
+- The Stage 1 mission page also includes a preparatory Stage 0.5. If a PR explicitly covers manual DI at Stage 0.5, review manual factory wiring and the provided activity test; do not require an automatic DI container yet.
+
+## Learning Review Trigger
+
+When a PR comment invokes the standard review with `@codex review`:
+
+- Review the entire PR diff at the current head commit, including relevant surrounding code. Do not limit the review to the latest commit's changes.
+- Determine the mission stage using the PR stage rules above and apply the relevant guidelines in `Code Review Rules` below.
+- Respond in Korean. State the mission stage and reviewed head commit so the review scope is clear.
+- Report correctness issues with concrete evidence and code locations. If none are found, say so without claiming that the code is free of defects.
+- Give relevant design feedback on architecture, responsibility separation, Android DI and lifecycle behavior, and naming. Explain the reasoning and alternatives without presenting preferences as defects.
+- Include 1–3 meaningful learning questions grounded in the PR, even if the code works correctly. Suggest a small test or experiment where useful.
+- Return review feedback only. Do not modify code, create commits, or push changes.
+
+The `@codex review` phrase is the GitHub review trigger. The repository rules above define the review style, so the author can use only that trigger. Add a short focus after it only when a one-off review needs a narrower scope.
 
 ## Code Review Rules
 
-### 리뷰 결과 작성 방식
+### Presenting Review Feedback
 
-- **동작 결함**: 실제로 깨지는 요구 사항, 재현 경로 또는 실패하는 테스트, 관련 코드를 제시한다. 추측만으로 결함이라고 단정하지 않는다.
-- **설계 피드백**: 책임이나 의존 방향에 대한 우려를 구체적인 코드 흐름으로 설명하고, 현재 단계에서 왜 중요한지 밝힌다.
-- **학습 질문**: 정상 동작하는 코드에도 적용할 수 있다. 설계 선택의 이유와 대안을 묻고, 작은 테스트나 실험으로 확인할 방법을 제안한다. 학습 질문을 결함이나 필수 수정 사항처럼 표시하지 않는다.
-- 학습 질문은 PR에서 가장 중요한 1~3개를 고른다. 질문의 답이 설계 판단이나 Android 동작 이해에 어떤 도움을 주는지도 짧게 설명한다.
-- 필수 요구 사항과 선택 요구 사항을 구분한다. 스타일 취향이나 아직 시작하지 않은 단계의 요구 사항으로 리뷰를 채우지 않는다.
+- **Correctness issues**: Identify the requirement that actually fails, a reproduction path or failing test, and the relevant code. Do not label speculation as a defect.
+- **Design feedback**: Explain concerns about responsibilities or dependency direction using concrete code flows, and explain why they matter at the current stage.
+- **Learning questions**: These can apply to working code. Ask about the reasoning behind a design and its alternatives, and suggest a small test or experiment to explore the question. Do not present learning questions as defects or mandatory fixes.
+- Choose the 1–3 most meaningful learning questions for the PR. Briefly explain how answering them helps with design decisions or understanding Android behavior.
+- Generate questions from concrete design decisions, code paths, and tests in the PR using the stage's learning focus below. These topics are not a fixed question bank. Do not repeat questions already answered convincingly in the PR or `README.md`; build on that reasoning where useful.
+- Connect each question to a code location or design choice, explain a plausible alternative and its tradeoff, and suggest a focused experiment when it would help. Do not invent defects or require speculative robustness features to produce learning feedback.
+- Distinguish mandatory requirements from optional ones. Avoid filling the review with style preferences or requirements from stages that have not started.
 
-### 아키텍처와 책임 분리
+### Architecture and Separation of Responsibilities
 
-- UI는 화면 표시와 사용자 입력을, ViewModel은 화면 상태와 작업 흐름을, Repository는 데이터 접근을 맡는지 살핀다. 계층 이름이나 파일 위치보다 실제 책임과 의존 방향을 기준으로 판단한다.
-- 도메인 모델이 Room 엔티티, Compose, Android `Context` 같은 기술 세부 사항에 불필요하게 의존하는지 확인한다. 매핑이 필요하다면 어느 경계에서 수행하는지 살핀다.
-- 추상화가 실제로 구현체 교체나 테스트에 도움이 되는지 살핀다. 인터페이스를 사용했다는 사실만으로 의존성 역전이 달성됐다고 판단하지 않는다.
-- `:di` 모듈을 분리한 뒤에는 코어가 쇼핑 앱의 도메인 타입과 Android 화면 생명주기를 직접 알아야 하는지 검토한다. 앱의 등록 코드와 Android 연동 코드를 어디에 둘지 근거를 확인한다.
-- Clean Architecture를 획일적인 계층 수로 평가하지 않는다. 변경 이유가 다른 코드가 함께 바뀌는지, 테스트나 구현체 교체가 어려워지는지 등 관찰 가능한 영향으로 피드백한다.
+- Check whether the UI handles rendering and user input, ViewModels handle screen state and workflows, and repositories handle data access. Judge actual responsibilities and dependency direction rather than layer names or file locations.
+- Check for unnecessary dependencies from domain models to implementation details such as Room entities, Compose, or Android `Context`. When mapping is needed, examine the boundary where it occurs.
+- Examine whether abstractions actually help replace implementations or support testing. Using an interface alone does not establish dependency inversion.
+- After extracting the `:di` module, examine whether the core needs direct knowledge of the shopping app's domain types or Android screen lifecycles. Check the reasoning behind where app registration code and Android integration code belong.
+- Do not evaluate Clean Architecture by a fixed number of layers. Base feedback on observable effects, such as code with different reasons to change being modified together, or difficulty testing and replacing implementations.
 
-### 네이밍과 추상화 경계
+### Naming and Abstraction Boundaries
 
-- 공개 인터페이스와 호출자가 사용하는 이름은 역할과 보장하는 동작을 설명하는지 확인한다. 호출자가 알 필요 없는 저장 방식, 생성 순서, reflection 사용 여부 같은 내부 구현이 이름에 새어 나오면 변경 시 어떤 호출부가 영향을 받는지 살핀다.
-- 구현체 이름은 구현 방식을 구분하는 데 필요한 정보를 담을 수 있다. `Room` 또는 `InMemory`처럼 실제 선택 기준이 되는 이름까지 일률적으로 숨기라고 요구하지 않는다.
-- 이름과 실제 동작이 어긋나는지 확인한다. 특히 목록 위치를 `id`로 부르거나, 매번 새로 만드는 객체를 공유 인스턴스처럼 부르거나, 화면 범위의 객체를 앱 전체 범위처럼 부르는 경우를 살핀다.
-- 네이밍 피드백에는 오해를 낳는 사용 예와 변경에 따른 영향을 제시한다. 단순한 단어 취향은 결함으로 보고하지 않는다.
+- Check whether names in public interfaces and names used by callers describe their roles and guaranteed behavior. If names expose internal details that callers do not need, such as storage mechanisms, creation order, or reflection use, examine which callers would be affected by changes to those details.
+- Implementation names may include details needed to distinguish implementations. Do not require hiding useful selection criteria such as `Room` or `InMemory` in every case.
+- Check for mismatches between names and behavior. Pay particular attention to a list position called an `id`, an object created on every call named as though it were shared, or an object scoped to a screen named as though it were application-wide.
+- Support naming feedback with usage examples that reveal the misunderstanding and explain the impact of a rename. Do not report word preferences as defects.
 
-### 단계별 필수 검토와 학습 주제
+### Required Checks and Learning Topics by Stage
 
-#### 1단계: 자동 DI
+#### Stage 1: Automatic DI
 
-- `ProductsViewModel`과 `CartViewModel`이 범용 생성 로직을 공유하고, ViewModel이 추가되어도 타입별 팩토리나 `when` 분기가 늘어나지 않는지 확인한다.
-- 두 화면이 같은 `CartRepository`를 사용하는지, 재구성이나 화면 재진입 때 장바구니가 예상치 않게 비지 않는지 확인한다. 이 단계에서는 Annotation을 요구하지 않는다.
-- 학습 질문: 생성자 정보를 런타임에 찾는 방식의 장단점은 무엇인가? 컨테이너의 생성 위치와 `viewModel()`의 소유자는 각각 객체의 수명에 어떤 영향을 주는가?
+Source: [Stage 1 mission](https://techcourse-lms-plus-web.woowahan.com/missions/43?step=321).
 
-#### 2단계: Annotation과 재귀 주입
+Learning objective: Move dependency construction out of consumers and replace repeated manual wiring with reusable creation logic.
 
-- 표시된 필드만 주입하고, ViewModel에서 Repository와 DAO까지 의존성을 재귀적으로 해결하는지 확인한다. 애노테이션의 대상과 보존 범위가 실제 reflection 경로와 맞는지도 본다.
-- Room 전환 과정에서 엔티티와 도메인 모델의 변환, `suspend` 호출 위치, 장바구니의 담은 시각 표시를 확인한다. 삭제는 목록 인덱스가 아닌 영속 ID로 대상 상품을 지정해야 한다.
-- 학습 질문: 생성자 주입이 가능한 곳에서 필드 주입은 어떤 비용을 만드는가? OS가 객체를 생성하는 Android 컴포넌트에서는 판단이 어떻게 달라지는가? 순환 의존성이 생기면 컨테이너는 어떻게 반응하는가?
+- **Required**: `ProductsViewModel` and `CartViewModel` use the same automatic injection logic. Adding another ViewModel must not require a factory or `when` branch for that specific ViewModel type.
+- **Required**: Both screens share the intended `CartRepository` instance. Entering the cart screen must not create a fresh repository and lose in-memory cart contents. The provided tests must pass, and annotations must not be used at this stage.
+- **Learning focus — responsibility**: Trace who constructs, resolves, and consumes dependencies. Examine whether replacing a repository affects the composition/wiring boundary or forces changes inside its consumer. A factory name alone does not establish this separation.
+- **Learning focus — Android ownership**: Examine where the container is created, how Compose recomposition affects it, and how `viewModel(factory = ...)` delegates ViewModel ownership. Keep the discussion proportional to this stage; do not require Stage 4 scope infrastructure.
+- **Learning focus — reflection and tests**: Examine how constructor metadata leads to dependency resolution and construction, which assumptions the implementation makes, and what the activity startup test actually proves. Use adding a new ViewModel or comparing repository identity across screens as focused experiments.
+- **Optional**: TDD, additional Robolectric feature tests, ViewModel tests, and domain/repository unit tests are extensions. Do not treat the absence of every optional test category as a mission failure.
 
-#### 3단계: Qualifier와 모듈 분리
+#### Stage 2: Annotations and Recursive Injection
 
-- 같은 인터페이스의 Room 구현체와 메모리 구현체를 명시적으로 선택할 수 있는지, 선택 정보 없이 모호하면 명확한 오류가 나는지 확인한다.
-- `:di` 모듈이 쇼핑 앱의 타입에 의존하지 않는지 확인한다. Qualifier 표현 방식과 모듈 형태의 선택 이유가 `README.md`에 있는지 살핀다.
-- 학습 질문: 문자열 키와 애노테이션 타입은 오류를 언제 발견하게 하는가? 순수 JVM 코어와 Android 연동 계층의 경계를 어디에 두는 것이 적절한가?
+Source: [Stage 2 mission](https://techcourse-lms-plus-web.woowahan.com/missions/43?step=325).
 
-#### 4단계: Lifecycle과 스코프
+Learning objective: Make injection targets explicit and resolve a dependency graph while preserving correct data identity and coroutine behavior.
 
-- `CartRepository`는 앱, `ProductRepository`는 ViewModel, `DateFormatter`는 내비게이션 목적지 화면의 수명에 맞춰 생성·재사용·해제되는지 확인한다. 스코프가 끝나면 인스턴스 참조도 제거되어야 한다.
-- 화면을 반복해서 드나들 때 인스턴스가 누적되지 않는지, 스코프별 생성과 소멸을 테스트하는지 확인한다. DI와 서비스 로케이터의 구분, reflection과 컴파일 타임 방식의 차이를 코드에 근거해 설명했는지도 본다.
-- 학습 질문: 재구성, 구성 변경, 백스택에서의 화면 제거는 각각 어떤 사건인가? `NavBackStackEntry`, `ViewModelStoreOwner`, `onCleared()` 중 무엇이 스코프 종료 신호로 적절한가?
+- **Required**: Implement field injection in ViewModels and inject only annotated fields. Verify runtime retention and whether the actual reflection path reads Kotlin properties or JVM fields, including use-site targets. Test both annotated and unannotated fields.
+- **Required**: Resolve dependencies recursively through ViewModel → repository → DAO. Identify the boundary between automatic construction and externally supplied objects such as the Room database. Tests must cover field injection and recursive resolution.
+- **Required**: Add the `CartProduct` domain model and entity-to-domain mapping. Show product names and added timestamps, call repository `suspend` operations from the ViewModel coroutine scope, and delete the intended item using its persistent `Long` ID rather than its list position. Keep provided tests passing with justified changes for the new model.
+- **Learning focus — injection timing**: Examine the period between object construction and field initialization, how consumers become safe to use, and how that differs from constructor injection. ViewModel field injection is deliberate practice in this stage; do not reject it merely because constructor injection is generally preferable. Relate the tradeoff to OS-created Android components when relevant.
+- **Learning focus — dependency graph**: Examine recursion, shared dependencies, error messages, and registration boundaries in the actual implementation. Circular dependencies and unsupported constructors are exploration topics unless the PR demonstrates a concrete failure; do not impose a production-grade container as a prerequisite.
+- **Learning focus — data and UI boundaries**: Trace persistent identity through state and deletion, keep suspending work outside non-suspending state-update lambdas, and examine where `DateFormatter` or formatted text belongs. Assess naming by whether it distinguishes persistent IDs from positions and communicates responsibilities.
+- **Optional**: Stable `LazyColumn` keys and avoiding direct UI references to `CartProductEntity` are optional mission items. They remain useful design discussion topics; distinguish such feedback from unmet mandatory requirements.
 
-#### 5단계: Hilt 또는 Koin으로 교체
+#### Stage 3: Qualifiers and Module Separation
 
-- 선택한 라이브러리로 교체한 뒤 이전 단계의 주입, 구현체 선택, 세 가지 수명 요구 사항과 기존 테스트가 유지되는지 확인한다. 라이브러리가 직접 제공하지 않는 스코프를 어떻게 구현했는지 살핀다.
-- 선택 이유, 스코프 우회 방법, 테스트 변경 이유가 있다면 `README.md`에 기록했는지 확인한다.
-- 학습 질문: 의존성 누락은 빌드 시점과 실행 시점 중 언제 드러나는가? 직접 만든 컨테이너와 비교해 Android 생명주기 연동, 테스트 용이성, 빌드 비용에서 무엇을 얻고 잃었는가?
+Source: [Stage 3 mission](https://techcourse-lms-plus-web.woowahan.com/missions/43?step=326).
+
+Learning objective: Separate dependency selection from consumers and separate a reusable DI engine from app-specific registration.
+
+- **Required**: Explicitly select Room or in-memory implementations of the same interface. Ambiguous resolution without a qualifier must produce a clear error rather than choosing an arbitrary registration. Test qualifier selection and the missing-qualifier failure.
+- **Required**: Extract the DI library into a separate module that does not depend on shopping app types. Inspect both imports and Gradle dependencies. Record the rationale for qualifier representation and an Android versus pure JVM module in `README.md`.
+- **Learning focus — keys and resolution**: Examine whether registration and lookup use consistent type-and-qualifier identity, whether different bindings can overwrite each other, and when mistakes in string keys or annotation types become visible. Evaluate the chosen representation instead of prescribing one universal choice.
+- **Learning focus — dependency direction**: Trace `:app` → `:di`, app-owned registration, and generic core resolution. Passing a type or provider into the core is different from hardcoding `CartRepository` in the core; evaluate the actual coupling.
+- **Learning focus — Android integration and naming**: Examine which layer supplies `Context` and will later receive lifecycle signals. An Android DI module is allowed; a pure JVM core is not mandatory. Check whether consumer-facing names expose irrelevant storage details while retaining implementation names that genuinely help select a binding.
+- **Optional**: A registration DSL and publishing the library are extensions. Do not require them to satisfy module separation or qualifier support.
+
+#### Stage 4: Lifecycles and Scopes
+
+Source: [Stage 4 mission](https://techcourse-lms-plus-web.woowahan.com/missions/43?step=330).
+
+Learning objective: Model instance identity and ownership explicitly, and release references when the owning scope ends.
+
+- **Required**: Keep `CartRepository` for the application lifetime, `ProductRepository` for its ViewModel lifetime, and `DateFormatter` for a navigation destination's lifetime. Reuse the formatter within that screen and create a new one after the destination is popped and entered again. An Activity scope is not a substitute for a destination scope in this single-Activity app.
+- **Required**: Drop scope-held instance references on scope closure, prevent accumulation across repeated navigation, and test both creation and disposal for each scope. Review the design for adding scope kinds without multiplying internal `when` branches.
+- **Required**: Include the link to the learner's “Why Reinvent the Wheel” write-up in the PR. In `README.md`, explain DI versus service locator using concrete code and distinguish that judgment from DIP and IoC. Explain what a migration to KSP would need to redesign, or justify retaining runtime resolution.
+- **Learning focus — ownership and signals**: Trace the scope key, owner, creation, reuse, and cleanup paths. Distinguish recomposition, leaving composition, configuration changes, and final back-stack removal. Evaluate `DisposableEffect`, lifecycle callbacks, and ViewModel cleanup against the behavior actually promised.
+- **Learning focus — boundaries and retention**: Examine how the Android integration layer signals a generic core, and whether longer-lived objects retain shorter-lived dependencies or an inappropriate `Context`. Use concrete reference paths rather than labeling every global container a memory leak.
+- **Learning focus — verification and API design**: Examine what a cleanup test observes: removal from the container, a disposal callback, or owner teardown. Dropping container references does not prove immediate garbage collection. Assess whether public testing hooks expose internal state unnecessarily, and use repeated navigation or same/different owner identity as targeted experiments.
+- **Optional**: Keeping `DateFormatter` across configuration changes and fully registering arbitrary scope kinds from outside the core are extensions. Do not report the lack of configuration-change retention as a mandatory failure; evaluate it if the PR claims to support it.
+
+#### Stage 5: Replacing the Container with Hilt or Koin
+
+Source: [Stage 5 mission](https://techcourse-lms-plus-web.woowahan.com/missions/43?step=332).
+
+Learning objective: Evaluate a library through the guarantees it preserves and the tradeoffs it introduces, using experience from the custom container.
+
+- **Required when undertaking Stage 5**: Replace app DI with Hilt or Koin while preserving repository injection, explicit implementation selection, all three Stage 4 lifetime guarantees, and existing tests. Keeping the old module and tests is allowed; do not require their deletion.
+- **Required**: Document the library choice against the criteria from the learner's “Why Reinvent the Wheel” write-up, unsupported-scope workarounds, and reasons for any test changes in `README.md`. Verify the actual application startup, registration, ViewModel integration, and testing setup for the selected library.
+- **Learning focus — scope equivalence**: Evaluate whether the library binding's actual owner matches the required lifetime. Do not equate a factory or application singleton with one instance per live destination. For Hilt, examine the destination-scope workaround; for Koin, examine scope identity and closure. Judge observed behavior rather than library-specific annotation or DSL names alone.
+- **Learning focus — migration and tests**: Examine which app boundaries remain independent of the DI framework and which tests change because of framework setup versus coupling to the old implementation. The mission preserves behavior, not every custom injection mechanism.
+- **Learning focus — failure timing and tradeoffs**: Examine when a missing binding is detected in the chosen configuration and compare that with the custom container. Discuss lifecycle integration, graph validation, testability, generated code, build cost, and runtime work using the PR's evidence. Do not assert performance improvements without measurements.
+- **Optional**: Trying both libraries and measuring startup or build time are extensions. If undertaken, review measurement conditions and the comparison; do not require benchmarks or a second implementation for completion.
